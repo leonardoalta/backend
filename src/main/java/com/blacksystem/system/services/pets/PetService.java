@@ -4,6 +4,7 @@ import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.PetRequest;
 import com.blacksystem.system.repositorys.pets.PetRepository;
+import com.blacksystem.system.services.CloudinaryService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,9 +15,12 @@ import java.util.List;
 public class PetService {
 
     private final PetRepository petRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public PetService(PetRepository petRepository) {
+    public PetService(PetRepository petRepository,
+                      CloudinaryService cloudinaryService) {
         this.petRepository = petRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public Pet registerPet(User user, PetRequest req, MultipartFile photo) {
@@ -42,9 +46,10 @@ public class PetService {
             pet.setOtherSpecies(null);
         }
 
-        // 📸 IMAGEN (por ahora solo URL simulada)
+        // 📸 SUBIR IMAGEN A CLOUDINARY
         if (photo != null && !photo.isEmpty()) {
-            pet.setImageUrl("/uploads/" + photo.getOriginalFilename());
+            String imageUrl = cloudinaryService.uploadImage(photo, "pets");
+            pet.setImageUrl(imageUrl);
         }
 
         return petRepository.save(pet);
