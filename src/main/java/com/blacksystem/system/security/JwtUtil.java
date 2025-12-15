@@ -20,6 +20,7 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
+    // 🔑 Clave segura para HS256
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
@@ -27,21 +28,19 @@ public class JwtUtil {
     // 🔐 GENERAR TOKEN
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .claim("authorized", userDetails.getAuthorities())
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .setSubject(userDetails.getUsername()) // email
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // 📩 OBTENER EMAIL
+    // 📩 OBTENER EMAIL DEL TOKEN
     public String getEmailFromToken(String token) {
         return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
+                .setSigningKey(getSigningKey())
+                .parseClaimsJws(token)
+                .getBody()
                 .getSubject();
     }
 
@@ -49,12 +48,12 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(getSigningKey())
-                    .build()
-                    .parseSignedClaims(token);
+                    .setSigningKey(getSigningKey())
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 }
+
