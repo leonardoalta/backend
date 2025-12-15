@@ -3,7 +3,7 @@ package com.blacksystem.system.controllers;
 import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.PetRequest;
-import com.blacksystem.system.services.PetService;
+import com.blacksystem.system.services.pets.PetService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
