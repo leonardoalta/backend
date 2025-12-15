@@ -8,47 +8,53 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
+
     @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
 
+    // 🔐 GENERAR TOKEN
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .claim("authorized", userDetails.getAuthorities())
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
+    // 📩 OBTENER EMAIL
     public String getEmailFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody()
+                .parseSignedClaims(token)
+                .getPayload()
                 .getSubject();
     }
 
+    // ✅ VALIDAR TOKEN
     public boolean validateToken(String token) {
-        try{
-            Jwts.parser().setSigningKey(jwtSecret).build().parseClaimsJws(token);
+        try {
+            Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
-
-    private SecretKey getSigningKey(){
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
-    }
-
 }
