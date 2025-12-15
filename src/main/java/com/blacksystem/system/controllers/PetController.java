@@ -4,6 +4,7 @@ import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.PetRequest;
 import com.blacksystem.system.services.pets.PetService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +23,19 @@ public class PetController {
         this.petService = petService;
     }
 
-    // 🐾 REGISTRAR MASCOTA (MULTIPART CORRECTO)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Pet registerPet(
             @AuthenticationPrincipal User user,
-            @RequestPart("data") PetRequest request,
+            @RequestPart("data") String data,
             @RequestPart(value = "photo", required = false) MultipartFile photo
-    ) {
+    ) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        PetRequest request = mapper.readValue(data, PetRequest.class);
+
         return petService.registerPet(user, request, photo);
     }
+
 
     // 🐾 OBTENER MIS MASCOTAS
     @GetMapping("/all")
