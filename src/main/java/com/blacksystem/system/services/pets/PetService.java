@@ -1,4 +1,4 @@
-package com.blacksystem.system.services;
+package com.blacksystem.system.services.pets;
 
 import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.User;
