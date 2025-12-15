@@ -4,6 +4,7 @@ import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.PetRequest;
 import com.blacksystem.system.services.pets.PetService;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pets")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*")
 public class PetController {
 
     private final PetService petService;
@@ -21,11 +22,11 @@ public class PetController {
         this.petService = petService;
     }
 
-    // 🐾 REGISTRAR MASCOTA
-    @PostMapping(consumes = "multipart/form-data")
+    // 🐾 REGISTRAR MASCOTA (MULTIPART CORRECTO)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Pet registerPet(
             @AuthenticationPrincipal User user,
-            @ModelAttribute PetRequest request,
+            @RequestPart("data") PetRequest request,
             @RequestPart(value = "photo", required = false) MultipartFile photo
     ) {
         return petService.registerPet(user, request, photo);
