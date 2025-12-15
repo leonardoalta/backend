@@ -32,7 +32,7 @@ public class TreatmentService {
 
         Treatment t = new Treatment();
         t.setMedicineName(req.getMedicineName());
-        t.setDate(LocalDate.now());
+        t.setStartDate(LocalDate.parse(req.getStartDate()));
         t.setDosageAmount(req.getDosageAmount());
         t.setDosageUnit(DosageUnit.valueOf(req.getDosageUnit().toUpperCase()));
         t.setAdministration(

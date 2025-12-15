@@ -26,7 +26,7 @@ public class Treatment {
     private String medicineName;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDate startDate;
 
     @Column(nullable = false)
     private int dosageAmount;

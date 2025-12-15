@@ -8,6 +8,7 @@ import lombok.Setter;
 public class TreatmentRequest {
 
     private String medicineName;
+    private String startDate; // yyyy-MM-dd
     private int dosageAmount;
     private String dosageUnit;
     private String administration;
@@ -15,3 +16,4 @@ public class TreatmentRequest {
     private int intervalHours;
     private boolean wantsReminders;
 }
+
