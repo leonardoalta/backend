@@ -61,10 +61,14 @@ public class PetService {
 // =========================================================
     public Pet getPetByIdAndUser(Long petId, User user) {
         return petRepository.findById(petId)
-                .filter(pet -> pet.getOwner().equals(user))
+                .filter(pet ->
+                        pet.getOwner() != null &&
+                                pet.getOwner().getIdUser().equals(user.getIdUser())
+                )
                 .orElseThrow(() ->
                         new RuntimeException("Mascota no encontrada o no pertenece al usuario")
                 );
     }
+
 
 }
