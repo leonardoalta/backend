@@ -56,4 +56,15 @@ public class PetService {
     public List<Pet> getPetsByUser(User user) {
         return petRepository.findByOwner(user);
     }
+    // =========================================================
+// 🔐 OBTENER MASCOTA POR ID Y USUARIO (MISMO PATRÓN QUE TREATMENTS)
+// =========================================================
+    public Pet getPetByIdAndUser(Long petId, User user) {
+        return petRepository.findById(petId)
+                .filter(pet -> pet.getOwner().equals(user))
+                .orElseThrow(() ->
+                        new RuntimeException("Mascota no encontrada o no pertenece al usuario")
+                );
+    }
+
 }
