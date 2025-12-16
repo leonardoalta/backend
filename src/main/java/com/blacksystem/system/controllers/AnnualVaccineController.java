@@ -70,7 +70,7 @@ public class AnnualVaccineController {
         AnnualVaccineRequest req =
                 mapper.readValue(data, AnnualVaccineRequest.class);
 
-        Pet pet = petService.getPetByIdAndUser(petId, user);
+        Pet pet = petService.getPetsByUser(user).get(0);
         AnnualVaccine vaccine = vaccineService.getByIdAndPet(id, pet);
 
         return vaccineService.update(vaccine, req, photo);
