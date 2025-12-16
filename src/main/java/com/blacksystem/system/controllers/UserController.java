@@ -4,12 +4,14 @@ import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.AuthResponse;
 import com.blacksystem.system.models.dto.LoginRequest;
 import com.blacksystem.system.models.dto.RegisterRequest;
+import com.blacksystem.system.models.dto.UserProfileDTO;
 import com.blacksystem.system.models.email.VerificationCode;
 import com.blacksystem.system.repositorys.email.VerificationCodeRepository;
 import com.blacksystem.system.services.AuthService;
 import com.blacksystem.system.services.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,11 +132,26 @@ public class UserController {
         }
     }
     @GetMapping("/me")
-    public ResponseEntity<?> getMyProfile(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+    public ResponseEntity<?> getMyProfile() {
 
-        return ResponseEntity.ok(user);
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        if (auth == null
+                || auth.getPrincipal() == null
+                || auth.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user = (User) auth.getPrincipal();
+
+        return ResponseEntity.ok(
+                UserProfileDTO.from(user)
+        );
     }
+
+
 
     private String generateNumericOTP(int length) {
         java.util.Random random = new java.util.Random();
