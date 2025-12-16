@@ -7,6 +7,7 @@ import com.blacksystem.system.repositorys.TreatmentRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -28,6 +29,8 @@ public class TreatmentReminderScheduler {
     /**
      * ⏰ Se ejecuta cada hora
      */
+    @Transactional
+
     @Scheduled(fixedRate = 120000) // cada 1 minuto
     public void sendTreatmentReminders() {
 
