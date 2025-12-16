@@ -35,10 +35,8 @@ public class PetService {
         pet.setSterilized(req.isSterilized());
         pet.setOwner(user);
 
-        // 🔥 NORMALIZAR ESPECIE
         if (!"Gato".equalsIgnoreCase(req.getSpecies())
                 && !"Perro".equalsIgnoreCase(req.getSpecies())) {
-
             pet.setSpecies("Otro");
             pet.setOtherSpecies(req.getOtherSpecies());
         } else {
@@ -46,10 +44,10 @@ public class PetService {
             pet.setOtherSpecies(null);
         }
 
-        // 📸 SUBIR IMAGEN A CLOUDINARY
         if (photo != null && !photo.isEmpty()) {
-            String imageUrl = cloudinaryService.uploadImage(photo, "pets");
-            pet.setImageUrl(imageUrl);
+            pet.setImageUrl(
+                    cloudinaryService.uploadImage(photo, "pets")
+            );
         }
 
         return petRepository.save(pet);

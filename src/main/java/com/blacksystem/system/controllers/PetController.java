@@ -18,6 +18,7 @@ import java.util.List;
 public class PetController {
 
     private final PetService petService;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public PetController(PetService petService) {
         this.petService = petService;
@@ -26,21 +27,14 @@ public class PetController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Pet registerPet(
             @AuthenticationPrincipal User user,
-            @RequestPart("data") String data,
-            @RequestPart(value = "photo", required = false) MultipartFile photo
+            @RequestParam("data") String data,
+            @RequestParam(value = "photo", required = false) MultipartFile photo
     ) throws Exception {
 
-        System.out.println("DATA RAW => " + data); // 👈 AÑADE ESTO
-
-        ObjectMapper mapper = new ObjectMapper();
         PetRequest request = mapper.readValue(data, PetRequest.class);
-
         return petService.registerPet(user, request, photo);
     }
 
-
-
-    // 🐾 OBTENER MIS MASCOTAS
     @GetMapping("/all")
     public List<Pet> getMyPets(@AuthenticationPrincipal User user) {
         return petService.getPetsByUser(user);
