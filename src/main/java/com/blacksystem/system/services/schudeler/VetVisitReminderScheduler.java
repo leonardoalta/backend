@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-
 @Service
 public class VetVisitReminderScheduler {
 
@@ -25,19 +24,15 @@ public class VetVisitReminderScheduler {
         this.emailService = emailService;
     }
 
-    /**
-     * ⏰ PRODUCCIÓN → una vez al día (8 AM)
-     */
     @Transactional
-   // @Scheduled(cron = "0 0 8 * * *")
-    @Scheduled(cron = "0 */2 * * * *")
-
+    @Scheduled(cron = "0 */2 * * * *") // pruebas
     public void sendVetVisitReminders() {
 
-        String today = LocalDate.now().toString(); // yyyy-MM-dd
+        LocalDate today = LocalDate.now(); // ✅ DATE REAL
 
         List<VetVisit> visits =
-                vetVisitRepository.findByWantsRemindersTrueAndNextVisitDate(today);
+                vetVisitRepository
+                        .findByWantsRemindersTrueAndNextVisitDate(today);
 
         for (VetVisit v : visits) {
 
@@ -73,10 +68,4 @@ public class VetVisitReminderScheduler {
             );
         }
     }
-
-    /**
-     * 🧪 PRUEBAS → cada 2 minutos
-     * (COMENTA el cron de arriba y usa este)
-     */
-    // @Scheduled(cron = "0 */2 * * * *")
 }

@@ -7,8 +7,8 @@ import com.blacksystem.system.repositorys.VetVisitRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
-
 @Service
 public class VetVisitService {
 
@@ -39,7 +39,14 @@ public class VetVisitService {
         visit.setVetName(req.getVetName());
         visit.setClinic(req.getClinic());
         visit.setWantsReminders(req.isWantsReminders());
-        visit.setNextVisitDate(req.getNextVisitDate());
+
+        // ✅ CLAVE
+        visit.setNextVisitDate(
+                req.getNextVisitDate() != null && !req.getNextVisitDate().isBlank()
+                        ? LocalDate.parse(req.getNextVisitDate())
+                        : null
+        );
+
         visit.setPet(pet);
 
         if (photo != null && !photo.isEmpty()) {
@@ -74,7 +81,13 @@ public class VetVisitService {
         visit.setVetName(req.getVetName());
         visit.setClinic(req.getClinic());
         visit.setWantsReminders(req.isWantsReminders());
-        visit.setNextVisitDate(req.getNextVisitDate());
+
+        // ✅ CLAVE
+        visit.setNextVisitDate(
+                req.getNextVisitDate() != null && !req.getNextVisitDate().isBlank()
+                        ? LocalDate.parse(req.getNextVisitDate())
+                        : null
+        );
 
         if (photo != null && !photo.isEmpty()) {
             visit.setPhotoUrl(
