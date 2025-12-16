@@ -31,7 +31,7 @@ public class TreatmentReminderScheduler {
      */
     @Transactional
 
-    @Scheduled(fixedRate = 120000) // cada 1 minuto
+    @Scheduled(cron = "0 0 * * * *")
     public void sendTreatmentReminders() {
 
         List<Treatment> treatments =
