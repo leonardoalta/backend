@@ -23,18 +23,15 @@ public class PetController {
         this.petService = petService;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public Pet registerPet(
             @AuthenticationPrincipal User user,
-            @RequestPart("data") String data,
+            @RequestPart("data") PetRequest request,
             @RequestPart(value = "photo", required = false) MultipartFile photo
-    ) throws Exception {
-
-        System.out.println("📩 DATA RECIBIDA: " + data);
-
-        ObjectMapper mapper = new ObjectMapper();
-        PetRequest request = mapper.readValue(data, PetRequest.class);
-
+    ) {
         return petService.registerPet(user, request, photo);
     }
 
