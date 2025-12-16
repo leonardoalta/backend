@@ -1,5 +1,6 @@
 package com.blacksystem.system.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,5 +39,7 @@ public class VetVisit {
     // 🔗 RELACIÓN CORRECTA
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id", nullable = false)
+    @JsonIgnore
     private Pet pet;
+
 }
