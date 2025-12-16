@@ -30,12 +30,13 @@ public class PetController {
             @RequestPart(value = "photo", required = false) MultipartFile photo
     ) throws Exception {
 
+        System.out.println("📩 DATA RECIBIDA: " + data);
+
         ObjectMapper mapper = new ObjectMapper();
         PetRequest request = mapper.readValue(data, PetRequest.class);
 
         return petService.registerPet(user, request, photo);
     }
-
 
     // 🐾 OBTENER MIS MASCOTAS
     @GetMapping("/all")
