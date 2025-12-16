@@ -13,50 +13,55 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/treatment")
+@RequestMapping("/api/treatments")
 @CrossOrigin(origins = "*")
 public class TreatmentController {
 
     private final TreatmentService treatmentService;
     private final PetService petService;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    public TreatmentController(TreatmentService treatmentService,
-                               PetService petService) {
+    public TreatmentController(
+            TreatmentService treatmentService,
+            PetService petService
+    ) {
         this.treatmentService = treatmentService;
         this.petService = petService;
     }
 
-    // -----------------------------------------
-    // 🔥 CREAR TRATAMIENTO
-    // -----------------------------------------
+    // =========================================================
+    // 🟢 CREAR TRATAMIENTO (POR MASCOTA)
+    // =========================================================
     @PostMapping(
-            value = "/new",
+            value = "/{petId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public Treatment createTreatment(
+    public Treatment create(
             @AuthenticationPrincipal User user,
+            @PathVariable Long petId,
             @RequestPart("data") String data,
             @RequestPart(value = "medicineImage", required = false)
             MultipartFile image
     ) throws Exception {
 
-        ObjectMapper mapper = new ObjectMapper();
-        TreatmentRequest req = mapper.readValue(data, TreatmentRequest.class);
+        TreatmentRequest req =
+                mapper.readValue(data, TreatmentRequest.class);
 
-        // ⚠️ Por ahora: 1 mascota activa
-        Pet pet = petService.getPetsByUser(user).get(0);
+        Pet pet = petService.getPetByIdAndUser(petId, user);
 
         return treatmentService.createTreatment(pet, req, image);
     }
 
-    // -----------------------------------------
-    // 🔥 LISTAR TRATAMIENTOS
-    // -----------------------------------------
-    @GetMapping("/list")
-    public List<Treatment> list(@AuthenticationPrincipal User user) {
-        Pet pet = petService.getPetsByUser(user).get(0);
+    // =========================================================
+    // 🔵 LISTAR TRATAMIENTOS POR MASCOTA
+    // =========================================================
+    @GetMapping("/{petId}/list")
+    public List<Treatment> list(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long petId
+    ) {
+        Pet pet = petService.getPetByIdAndUser(petId, user);
         return treatmentService.getTreatmentsByPet(pet);
     }
 }
