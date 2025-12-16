@@ -72,6 +72,30 @@ public class EmailService {
             }
         }
 
+    public void sendVaccineReminder(
+            String to,
+            String petName,
+            String vaccineName,
+            String nextDate
+    ) {
+        String subject = "💉 Recordatorio de vacuna - " + petName;
+
+        String body = """
+        Hola 👋
+        
+        Te recordamos que tu mascota %s
+        tiene programada la siguiente vacuna:
+        
+        🦠 Vacuna: %s
+        📅 Fecha: %s
+        
+        Cuida su salud ❤️
+        
+        — Carnet Veterinario Digital
+        """.formatted(petName, vaccineName, nextDate);
+
+        sendEmail(to, subject, body);
+    }
 
         private String buildVerificationEmail(String code) {
             return "<!DOCTYPE html>" +
