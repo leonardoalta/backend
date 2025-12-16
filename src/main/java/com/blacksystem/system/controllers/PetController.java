@@ -29,11 +29,16 @@ public class PetController {
     )
     public Pet registerPet(
             @AuthenticationPrincipal User user,
-            @RequestPart("data") PetRequest request,
+            @RequestPart("data") String data,
             @RequestPart(value = "photo", required = false) MultipartFile photo
-    ) {
+    ) throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+        PetRequest request = mapper.readValue(data, PetRequest.class);
+
         return petService.registerPet(user, request, photo);
     }
+
 
     // 🐾 OBTENER MIS MASCOTAS
     @GetMapping("/all")
