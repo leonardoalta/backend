@@ -25,7 +25,7 @@ public class VetVisitReminderScheduler {
     }
 
     @Transactional
-    @Scheduled(cron = "0 */2 * * * *") // pruebas
+    @Scheduled(cron = "0 0 8 * * *")
     public void sendVetVisitReminders() {
 
         LocalDate today = LocalDate.now(); // ✅ DATE REAL

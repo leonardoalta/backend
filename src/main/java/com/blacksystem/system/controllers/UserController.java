@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
+import org.springframework.security.core.Authentication;
+
 
 
 @RestController
@@ -126,6 +128,12 @@ public class UserController {
             logger.error("Error reenviando código: {}", e.getMessage());
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
+    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getMyProfile(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(user);
     }
 
     private String generateNumericOTP(int length) {
