@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface TreatmentRepository extends JpaRepository<Treatment, Long> {
 
+    List<Treatment> findByWantsRemindersTrue();
+
     List<Treatment> findByPet(Pet pet);
 
     // 🔥 FILTROS POTENTES
