@@ -12,5 +12,10 @@ public interface AnnualVaccineRepository
 
     List<AnnualVaccine> findByPet(Pet pet);
     List<AnnualVaccine> findByWantsRemindersTrueAndNextVaccineDate(LocalDate date);
+    List<AnnualVaccine> findByPetAndWantsRemindersTrueAndNextVaccineDateBetween(
+            Pet pet,
+            LocalDate start,
+            LocalDate end
+    );
 
 }
