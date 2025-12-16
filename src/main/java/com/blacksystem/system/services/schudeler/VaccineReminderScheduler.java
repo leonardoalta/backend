@@ -29,7 +29,7 @@ public class VaccineReminderScheduler {
      * ⏰ Se ejecuta cada día (8 AM)
      */
     @Transactional
-    @Scheduled(cron = "0 */2 * * * *")
+    @Scheduled(cron = "0 0 8 * * *")
     public void sendVaccineReminders() {
 
         LocalDate today = LocalDate.now();

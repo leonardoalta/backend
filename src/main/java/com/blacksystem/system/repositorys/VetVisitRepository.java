@@ -12,4 +12,6 @@ public interface VetVisitRepository extends JpaRepository<VetVisit, Long> {
     List<VetVisit> findByPet(Pet pet);
 
     Optional<VetVisit> findByIdAndPet(Long id, Pet pet);
+    List<VetVisit> findByWantsRemindersTrueAndNextVisitDate(String nextVisitDate);
+
 }
