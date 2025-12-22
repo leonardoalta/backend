@@ -23,18 +23,21 @@ public class PetPhysicalService {
 
         PetPhysicalData data = new PetPhysicalData();
         data.setPet(pet);
-        data.setWeightKg(req.getWeightKg());
+
+        // 🔥 Si no mandan peso, usar el peso inicial
+        if (req.getWeightKg() == null) {
+            data.setWeightKg(pet.getWeight());
+        } else {
+            data.setWeightKg(req.getWeightKg());
+        }
+
         data.setHeightCm(req.getHeightCm());
-
-        // 🔥 Conversión segura int → enum
-        data.setBcs(
-                BodyConditionScore.fromValue(req.getBcs())
-        );
-
+        data.setBcs(BodyConditionScore.fromValue(req.getBcs()));
         data.setRecordedAt(LocalDate.parse(req.getRecordedAt()));
 
         return repository.save(data);
     }
+
 
     public List<PetPhysicalData> getHistory(Pet pet) {
         return repository.findByPetOrderByRecordedAtDesc(pet);
