@@ -1,12 +1,11 @@
 package com.blacksystem.system.models.enums;
 
 public enum BodyConditionScore {
-
-    VERY_THIN(1),
-    THIN(2),
+    MUY_DELGADO(1),
+    DELGADO(2),
     IDEAL(3),
-    OVERWEIGHT(4),
-    OBESE(5);
+    SOBREPESO(4),
+    OBESO(5);
 
     private final int value;
 
@@ -18,7 +17,7 @@ public enum BodyConditionScore {
         return value;
     }
 
-    // 🔥 Conversión segura desde int (Flutter)
+    // 🔥 ESTE MÉTODO ES CLAVE
     public static BodyConditionScore fromValue(int value) {
         for (BodyConditionScore bcs : values()) {
             if (bcs.value == value) {

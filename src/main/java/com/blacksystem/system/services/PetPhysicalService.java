@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-
 @Service
 public class PetPhysicalService {
 
@@ -24,20 +23,20 @@ public class PetPhysicalService {
         PetPhysicalData data = new PetPhysicalData();
         data.setPet(pet);
 
-        // 🔥 Si no mandan peso, usar el peso inicial
-        if (req.getWeightKg() == null) {
-            data.setWeightKg(pet.getWeight());
-        } else {
-            data.setWeightKg(req.getWeightKg());
-        }
+        // ⚖️ peso base
+        data.setWeightKg(
+                req.getWeightKg() != null ? req.getWeightKg() : pet.getWeight()
+        );
 
         data.setHeightCm(req.getHeightCm());
+
+        // 🔥 AQUÍ YA FUNCIONA
         data.setBcs(BodyConditionScore.fromValue(req.getBcs()));
+
         data.setRecordedAt(LocalDate.parse(req.getRecordedAt()));
 
         return repository.save(data);
     }
-
 
     public List<PetPhysicalData> getHistory(Pet pet) {
         return repository.findByPetOrderByRecordedAtDesc(pet);
