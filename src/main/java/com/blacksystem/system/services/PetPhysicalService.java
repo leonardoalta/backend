@@ -3,6 +3,7 @@ package com.blacksystem.system.services;
 import com.blacksystem.system.models.Pet;
 import com.blacksystem.system.models.PetPhysicalData;
 import com.blacksystem.system.models.dto.PhysicalDataRequest;
+import com.blacksystem.system.models.dto.PetPhysicalResponse;
 import com.blacksystem.system.models.enums.BodyConditionScore;
 import com.blacksystem.system.repositorys.PetPhysicalRepository;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,6 @@ public class PetPhysicalService {
     // =====================================================
     public PetPhysicalData save(Pet pet, PhysicalDataRequest req) {
 
-        System.out.println("🔥 GUARDANDO CONTROL FÍSICO PARA PET ID: " + pet.getId());
-        System.out.println("BCS = " + req.getBcs());
-
         PetPhysicalData data = new PetPhysicalData();
         data.setPet(pet);
 
@@ -46,18 +44,34 @@ public class PetPhysicalService {
     }
 
     // =====================================================
-    // 📊 HISTORIAL (POR ID, NO POR ENTIDAD)
+    // 📊 HISTORIAL (DTO)
     // =====================================================
-    public List<PetPhysicalData> getHistory(Long petId) {
-        return repository.findByPet_IdOrderByRecordedAtDesc(petId);
+    public List<PetPhysicalResponse> getHistory(Long petId) {
+        return repository.findByPet_IdOrderByRecordedAtDesc(petId)
+                .stream()
+                .map(d -> new PetPhysicalResponse(
+                        d.getId(),
+                        d.getWeightKg(),
+                        d.getHeightCm(),
+                        d.getBcs(),
+                        d.getRecordedAt()
+                ))
+                .toList();
     }
 
     // =====================================================
-    // 📌 ÚLTIMO REGISTRO
+    // 📌 ÚLTIMO REGISTRO (DTO)
     // =====================================================
-    public PetPhysicalData getLatest(Long petId) {
+    public PetPhysicalResponse getLatest(Long petId) {
         return repository
                 .findTopByPet_IdOrderByRecordedAtDesc(petId)
+                .map(d -> new PetPhysicalResponse(
+                        d.getId(),
+                        d.getWeightKg(),
+                        d.getHeightCm(),
+                        d.getBcs(),
+                        d.getRecordedAt()
+                ))
                 .orElse(null);
     }
 }

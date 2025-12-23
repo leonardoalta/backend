@@ -1,8 +1,8 @@
 package com.blacksystem.system.controllers;
 
-import com.blacksystem.system.models.PetPhysicalData;
 import com.blacksystem.system.models.User;
 import com.blacksystem.system.models.dto.PhysicalDataRequest;
+import com.blacksystem.system.models.dto.PetPhysicalResponse;
 import com.blacksystem.system.services.PetPhysicalService;
 import com.blacksystem.system.services.pets.PetService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,31 +30,26 @@ public class PetPhysicalController {
     // 📥 REGISTRAR CONTROL FÍSICO
     // =====================================================
     @PostMapping
-    public PetPhysicalData save(
+    public void save(
             @PathVariable Long petId,
             @AuthenticationPrincipal User user,
             @RequestBody PhysicalDataRequest request
     ) {
-        // 🔐 Seguridad
-        petService.getPetByIdAndUser(petId, user);
-
-        return physicalService.save(
+        physicalService.save(
                 petService.getPetByIdAndUser(petId, user),
                 request
         );
     }
 
     // =====================================================
-    // 📊 HISTORIAL COMPLETO
+    // 📊 HISTORIAL
     // =====================================================
     @GetMapping
-    public List<PetPhysicalData> history(
+    public List<PetPhysicalResponse> history(
             @PathVariable Long petId,
             @AuthenticationPrincipal User user
     ) {
-        // 🔐 Seguridad
         petService.getPetByIdAndUser(petId, user);
-
         return physicalService.getHistory(petId);
     }
 
@@ -62,13 +57,12 @@ public class PetPhysicalController {
     // 📌 ÚLTIMO REGISTRO
     // =====================================================
     @GetMapping("/latest")
-    public PetPhysicalData latest(
+    public PetPhysicalResponse latest(
             @PathVariable Long petId,
             @AuthenticationPrincipal User user
     ) {
-        // 🔐 Seguridad
         petService.getPetByIdAndUser(petId, user);
-
         return physicalService.getLatest(petId);
     }
 }
+
