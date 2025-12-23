@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+
 @Service
 @Transactional
-
 public class PetPhysicalService {
 
     private final PetPhysicalRepository repository;
@@ -21,7 +21,9 @@ public class PetPhysicalService {
         this.repository = repository;
     }
 
-    @Transactional
+    // =====================================================
+    // 💾 GUARDAR CONTROL FÍSICO
+    // =====================================================
     public PetPhysicalData save(Pet pet, PhysicalDataRequest req) {
 
         System.out.println("🔥 GUARDANDO CONTROL FÍSICO PARA PET ID: " + pet.getId());
@@ -31,7 +33,9 @@ public class PetPhysicalService {
         data.setPet(pet);
 
         data.setWeightKg(
-                req.getWeightKg() != null ? req.getWeightKg() : pet.getWeight()
+                req.getWeightKg() != null
+                        ? req.getWeightKg()
+                        : pet.getWeight()
         );
 
         data.setHeightCm(req.getHeightCm());
@@ -41,14 +45,19 @@ public class PetPhysicalService {
         return repository.save(data);
     }
 
-
-    public List<PetPhysicalData> getHistory(Pet pet) {
-        return repository.findByPetOrderByRecordedAtDesc(pet);
+    // =====================================================
+    // 📊 HISTORIAL (POR ID, NO POR ENTIDAD)
+    // =====================================================
+    public List<PetPhysicalData> getHistory(Long petId) {
+        return repository.findByPet_IdOrderByRecordedAtDesc(petId);
     }
 
-    public PetPhysicalData getLatest(Pet pet) {
+    // =====================================================
+    // 📌 ÚLTIMO REGISTRO
+    // =====================================================
+    public PetPhysicalData getLatest(Long petId) {
         return repository
-                .findTopByPetOrderByRecordedAtDesc(pet)
+                .findTopByPet_IdOrderByRecordedAtDesc(petId)
                 .orElse(null);
     }
 }
