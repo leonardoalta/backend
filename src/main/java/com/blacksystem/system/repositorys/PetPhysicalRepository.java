@@ -9,12 +9,8 @@ import java.util.Optional;
 public interface PetPhysicalRepository
         extends JpaRepository<PetPhysicalData, Long> {
 
-    // 📊 HISTORIAL COMPLETO
-    List<PetPhysicalData>
-    findByPet_IdOrderByRecordedAtDesc(Long petId);
+    List<PetPhysicalData> findByPet_IdOrderByCreatedAtDesc(Long petId);
 
-    // 📌 ÚLTIMO REGISTRO
-    Optional<PetPhysicalData>
-    findTopByPet_IdOrderByRecordedAtDesc(Long petId);
+    Optional<PetPhysicalData> findTopByPet_IdOrderByCreatedAtDesc(Long petId);
 }
 

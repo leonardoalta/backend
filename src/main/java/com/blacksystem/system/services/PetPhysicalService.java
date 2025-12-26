@@ -44,10 +44,10 @@ public class PetPhysicalService {
     }
 
     // =====================================================
-    // 📊 HISTORIAL (DTO)
+    // 📊 HISTORIAL (ORDEN REAL)
     // =====================================================
     public List<PetPhysicalResponse> getHistory(Long petId) {
-        return repository.findByPet_IdOrderByRecordedAtDesc(petId)
+        return repository.findByPet_IdOrderByCreatedAtDesc(petId)
                 .stream()
                 .map(d -> new PetPhysicalResponse(
                         d.getId(),
@@ -60,11 +60,11 @@ public class PetPhysicalService {
     }
 
     // =====================================================
-    // 📌 ÚLTIMO REGISTRO (DTO)
+    // 📌 ÚLTIMO REGISTRO REAL
     // =====================================================
     public PetPhysicalResponse getLatest(Long petId) {
         return repository
-                .findTopByPet_IdOrderByRecordedAtDesc(petId)
+                .findTopByPet_IdOrderByCreatedAtDesc(petId)
                 .map(d -> new PetPhysicalResponse(
                         d.getId(),
                         d.getWeightKg(),
